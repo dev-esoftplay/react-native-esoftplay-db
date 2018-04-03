@@ -1,0 +1,27 @@
+{
+  "name": "react-native-esoftplay-db",
+  "version": "1.0.0",
+  "description": "an SQLite helper for esoftplay developer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-esoftplay/react-native-esoftplay-db.git"
+  },
+  "keywords": [
+    "react-native-esoftplay-db"
+  ],
+  "author": "masmun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dev-esoftplay/react-native-esoftplay-db/issues"
+  },
+  "homepage": "https://github.com/dev-esoftplay/react-native-esoftplay-db#readme",
+  "dependencies": {
+    "expo": "^26.0.0",
+    "react": "^16.3.0",
+    "react-native": "^0.54.4"
+  }
+}
