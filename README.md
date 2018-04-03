@@ -54,6 +54,7 @@ Arguments
   - insertId: last id after insert
 - debug(0|1) : console log db process default 0
 
+
 ###### UPDATE
 ```
 db.Update(id, values, rowAffected, debug)
@@ -66,6 +67,7 @@ Arguments
   - rowAffected: how many row affected in this execution
 - debug(0|1) : console log db process default 0
 
+
 ###### DELETE (with WHERE id)
 ```
 db.Delete(id,null,null, rowAffected, debug)
@@ -76,6 +78,7 @@ Arguments
 - rowAffected (callback) - callback with 1 param (rowAffected)
   - rowAffected: how many row affected in this execution
 - debug(0|1) : console log db process default 0
+
 
 ###### DELETE (with WHERE clause)
 ```
@@ -89,6 +92,7 @@ Arguments
   - rowAffected: how many row affected in this execution
 - debug(0|1) : console log db process default 0
 
+
 ###### GET ONE ROW (with WHERE id)
 ```
 db.getRow(id, null, null, result, debug)
@@ -99,6 +103,7 @@ Arguments
 - result (callback) - callback with 1 param (result)
   - result: query result
 - debug(0|1) : console log db process default 0
+
 
 ###### GET ONE ROW (with WHERE clause)
 ```
@@ -111,6 +116,7 @@ Arguments
 - result (callback) - callback with 1 param (result)
   - result: query result
 - debug(0|1) : console log db process default 0
+
 
 ###### GET ALL 
 ```
@@ -128,6 +134,7 @@ Arguments
   - result: query result
 - debug(0|1) : console log db process default 0
 
+
 ###### CUSTOM QUERY
 ```
 db.execute(query, result, debug)
@@ -138,6 +145,7 @@ Arguments
 - result (callback) - callback with 1 param (result)
   - result: query result with webSQLiteResult format
 - debug(0|1) : console log db process default 0
+
 
 
 #### Example
