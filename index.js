@@ -1,6 +1,5 @@
-import { SQLite } from 'expo';
-import config from '../config';
-
+import SQLite from './node_modules/expo/src/SQLite.js' ;
+import config from '../../config';
 
 /* EXAMPLE CREATE CLASS DB EXTENDS HELPER
 
@@ -124,6 +123,7 @@ export default class Helper {
   constructor() {
 
   }
+  
 
   isDebug = config.isDebug
 
