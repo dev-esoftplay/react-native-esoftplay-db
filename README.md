@@ -36,7 +36,7 @@ export default class Event extends Helper {
 }
 
 ```
-5. done
+3. done
 
 #### Usage
 
