@@ -1,4 +1,4 @@
-import SQLite from './node_modules/expo/src/SQLite.js' ;
+import SQLite from '../../node_modules/expo/src/SQLite.js' ;
 import config from '../../config';
 
 /* EXAMPLE CREATE CLASS DB EXTENDS HELPER
