@@ -58,7 +58,6 @@ Arguments
 ###### UPDATE
 ```
 db.Update(id, values, rowAffected, debug)
-
 ```
 Arguments
 - id (string|int) - an id for 'where' reference
@@ -71,7 +70,6 @@ Arguments
 ###### DELETE (with WHERE id)
 ```
 db.Delete(id,null,null, rowAffected, debug)
-
 ```
 Arguments
 - id (string|int) - an id for 'where' reference
@@ -83,7 +81,6 @@ Arguments
 ###### DELETE (with WHERE clause)
 ```
 db.Delete(null,fields,arguments, rowAffected, debug)
-
 ```
 Arguments
 - fields (array) - an array fieldname
@@ -96,7 +93,6 @@ Arguments
 ###### GET ONE ROW (with WHERE id)
 ```
 db.getRow(id, null, null, result, debug)
-
 ```
 Arguments
 - id (string|int) - an id for 'where' reference
@@ -108,7 +104,6 @@ Arguments
 ###### GET ONE ROW (with WHERE clause)
 ```
 db.getRow(null, fields, arguments, result, debug)
-
 ```
 Arguments
 - fields (array) - an array fieldname
@@ -121,7 +116,6 @@ Arguments
 ###### GET ALL 
 ```
 db.getAll(fields, arguments, orderBy, limit, offset, groupBy, result, debug) 
-
 ```
 Arguments
 - fields (array) - an array fieldname
@@ -138,7 +132,6 @@ Arguments
 ###### CUSTOM QUERY
 ```
 db.execute(query, result, debug)
-
 ```
 Arguments
 - query (string) - an sql query
