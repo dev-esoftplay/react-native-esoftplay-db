@@ -1,5 +1,8 @@
 # Esoftplay SQLite Helper
 A SQLite helper for esoftplay developer
+```
+note : this module require to install expo first
+```
 
 #### Instalation
 1. install the npm package
