@@ -21,7 +21,6 @@ export default class Event extends Helper {
   static image = "image";
   static created = "created";
   static url = "url";
-
   sql = "CREATE TABLE IF NOT EXISTS '" + Event.table + "' (" + this.getSQLFormat() + ")" 
 
   //*require
@@ -37,7 +36,7 @@ export default class Event extends Helper {
 }
 
 ```
-3. done
+5. done
 
 #### Usage
 
@@ -140,35 +139,10 @@ Arguments
   - result: query result with webSQLiteResult format
 - debug(0|1) : console log db process default 0
 
-<!-- 
-#### Examples
 
-###### GET
-```
-new Curl('movies', null,
-  (result, message){
-  	//do your stuf	
-  },
-  (message){
-  	//do your stuf
-  }
-)
-```
+#### Example
 
-###### POST
+###### GET ROW
 ```
-var post ={
-  key1:value1,
-  key2:value2
-}
-
-new Curl('movies', post,
-  (result, message){
-  	//do your stuf	
-  },
-  (message){
-  	//do your stuf
-  }
-)
+db.getRow(null, [Event.title, Event.Intro], ['masmun','jos'], (result)=>{ //do your stuff })
 ```
- -->
