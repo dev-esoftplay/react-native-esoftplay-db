@@ -1,6 +1,6 @@
 {
   "name": "react-native-esoftplay-db",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "an SQLite helper for esoftplay developer",
   "main": "index.js",
   "scripts": {
