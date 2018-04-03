@@ -1,5 +1,4 @@
-import { FileSystem, Permissions, SQLite } from 'expo';
-import { AsyncStorage } from 'react-native';
+import { SQLite } from 'expo';
 import config from '../config';
 
 
