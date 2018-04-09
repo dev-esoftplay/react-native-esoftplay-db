@@ -524,7 +524,6 @@ export default class Helper {
     var statement = ''
     var error_msg = ''
     var l = arguments.length
-    configConsole(l)
     switch (l) {
       case 1:
         if (typeof arguments[0] == 'function') {
