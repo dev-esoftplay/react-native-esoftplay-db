@@ -520,7 +520,7 @@ export default class Helper {
   // getAll ([], [], (), 1)
   // getAll (li, of, (), 1)
 
-  getAll(selectionArray, argumentArray, orderBy, limit, offset, groupBy, callback, debug = 1) {
+  getAll(selectionArray, argumentArray, orderBy, limit, offset, groupBy, callback, debug = 0) {
     var statement = ''
     var error_msg = ''
     var l = arguments.length
