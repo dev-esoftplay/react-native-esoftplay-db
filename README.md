@@ -156,5 +156,5 @@ Arguments
 
 ###### GET ROW
 ```
-db.getRow(null, [Event.title, Event.Intro], ['masmun','jos'], (result)=>{ //do your stuff })
+db.getRow([Event.title, Event.Intro], ['masmun','jos'], (result)=>{ //do your stuff })
 ```
