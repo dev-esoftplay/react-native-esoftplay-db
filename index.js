@@ -1,4 +1,4 @@
-import SQLite from '../../node_modules/expo/src/SQLite.js' ;
+import SQLite from '../../node_modules/expo/src/SQLite.js';
 import config from '../../config';
 
 /* EXAMPLE CREATE CLASS DB EXTENDS HELPER
@@ -123,7 +123,7 @@ export default class Helper {
   constructor() {
 
   }
-  
+
 
   isDebug = config.isDebug
 
@@ -247,6 +247,9 @@ export default class Helper {
     }
   }
 
+  // Insert ({})
+  // Insert ({},())
+  // Insert ({},1)
   Insert(values, callbackInsertID, debug = 0) {
     if (values instanceof Object) {
       values = this.verify(values)
@@ -282,6 +285,9 @@ export default class Helper {
     }
   }
 
+  // Update (1,{})
+  // Update (1,{},())
+  // Update (1,{},1)
   Update(id, values, callback, debug = 0) {
     values = this.verify(values)
     var arValues = []
@@ -308,120 +314,298 @@ export default class Helper {
     }
   }
 
+  /* 1 */
+  // Delete(1)
+
+  /* 2 */
+  // Delete(1,1)
+  // Delete(1,())
+  // Delete([],[])
+
+  /* 3 */
+  // Delete(1,(),1)
+  // Delete([],[],1)
+  // Delete([],[],())
+
+  /* 4 */
+  // Delete([],[],(),1)
   Delete(id, selectionArray, argumentArray, callback, debug = 0) {
     var statement = ''
-    if (!isNaN(arguments[0])) {
-      statement = 'DELETE FROM ' + this.table + ' WHERE ' + this.getColumn()[0] + '=' + arguments[0]
-    }
-    if (Array.isArray(arguments[1]) && Array.isArray(arguments[2])) {
-      if (arguments[1].length === arguments[2].length) {
-        var elmns = []
-        for (let i = 0; i < arguments[1].length; i++) {
-          const element = arguments[1][i];
-          elmns.push(element + '=' + "'" + arguments[2][i] + "'")
+    var error_msg = ''
+    var l = arguments.length
+    switch (l) {
+      case 1:
+        if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string') {
+          this.Delete(arguments[0], null, null, null, debug)
+        } else {
+          error_msg = 'id must be string or int'
         }
-        statement = 'DELETE FROM ' + this.table + ' WHERE ' + elmns.join(' AND ')
-      } else {
-        if (debug == 1)
-          this.configConsole('length of arguments and values are not same')
-      }
+        break;
+      case 2:
+        if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string' && typeof arguments[1] == 'number') {
+          this.Delete(arguments[0], null, null, null, arguments[1])
+        } else if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string' && typeof arguments[1] == 'function') {
+          this.Delete(arguments[0], null, null, arguments[1], debug)
+        } else if (Array.isArray(arguments[0]) && Array.isArray(arguments[1])) {
+          this.Delete(null, arguments[0], arguments[1], null, debug)
+        } else {
+          error_msg = ' please check usage with 2 arguments'
+        }
+        break
+      case 3:
+        if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string' && typeof arguments[1] == 'function' && typeof arguments[2] == 'number') {
+          this.Delete(arguments[0], null, null, arguments[1], arguments[2])
+        } else if (Array.isArray(arguments[0]) && Array.isArray(arguments[1]) && typeof arguments[2] == 'number') {
+          this.Delete(null, arguments[0], arguments[1], null, arguments[2])
+        } else if (Array.isArray(arguments[0]) && Array.isArray(arguments[1]) && typeof arguments[2] == 'function') {
+          this.Delete(null, arguments[0], arguments[1], arguments[2], debug)
+        } else {
+          error_msg = ' please check usage with 3 arguments'
+        }
+        break
+      case 4:
+        if (Array.isArray(arguments[0]) && Array.isArray(arguments[1]) && typeof arguments[2] == 'function' && typeof arguments[3] == 'number') {
+          this.Delete(null, arguments[0], arguments[1], arguments[2], arguments[3])
+        } else if (arguments[0] == null && Array.isArray(arguments[1]) && Array.isArray(arguments[2]) && typeof arguments[3] == 'function') {
+          this.Delete(null, arguments[1], arguments[2], arguments[3], debug)
+        } else if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string' && arguments[1] == null && arguments[2] == null && typeof arguments[3] == 'function') {
+          this.Delete(arguments[0], null, null, arguments[3], debug)
+        } else {
+          error_msg = ' please check usage with 4 arguments'
+        }
+        break
+      default:
+        if (l == 5) {
+          if (!isNaN(arguments[0])) {
+            statement = 'DELETE FROM ' + this.table + ' WHERE ' + this.getColumn()[0] + '=' + arguments[0]
+          }
+          if (Array.isArray(arguments[1]) && Array.isArray(arguments[2])) {
+            if (arguments[1].length === arguments[2].length) {
+              var elmns = []
+              for (let i = 0; i < arguments[1].length; i++) {
+                const element = arguments[1][i];
+                elmns.push(element + '=' + "'" + arguments[2][i] + "'")
+              }
+              statement = 'DELETE FROM ' + this.table + ' WHERE ' + elmns.join(' AND ')
+            } else {
+              if (debug == 1)
+                this.configConsole('length of arguments and values are not same')
+            }
+          }
+          if (debug == 1)
+            this.configConsole('Delete() => ' + statement)
+          if (statement != '') {
+            try {
+              this.db.transaction((tx) => {
+                tx.executeSql(statement, [], (transaction, result) => {
+                  if (debug == 1) this.configConsole('Delete() => ' + result.rowsAffected)
+                  if (callback) callback(result.rowsAffected)
+                }, (t, eror) => this.configConsole('Delete() error => ', t, eror))
+              })
+            } catch (e) {
+              if (debug == 1)
+                this.configConsole(e)
+            }
+          } else {
+            if (debug == 1)
+              this.configConsole('statement is empty, please insert (id) or ([]fields,[]values)')
+          }
+          break;
+        } else {
+          error_msg = 'not supported arguments'
+        }
     }
-    if (debug == 1)
-      this.configConsole('Delete() => ' + statement)
-    if (statement != '') {
-      try {
-        this.db.transaction((tx) => {
-          tx.executeSql(statement, [], (transaction, result) => {
-            if (debug == 1) this.configConsole('Delete() => ' + result.rowsAffected)
-            if (callback) callback(result.rowsAffected)
-          }, (t, eror) => this.configConsole('Delete() error => ', t, eror))
-        })
-      } catch (e) {
-        if (debug == 1)
-          this.configConsole(e)
-      }
-    } else {
-      if (debug == 1)
-        this.configConsole('statement is empty, please insert (id) or ([]fields,[]values)')
+    if (error_msg != '' && debug == 1) {
+      this.configConsole('Delete() => ERROR' + error_msg)
     }
   }
 
+
+  /* 2 */
+  // getRow(1,())
+
+  /* 3 */
+  // getRow(1,(),1)
+  // getRow([],[],())
+
+  /* 4 */
+  // getRow([],[],(),1)
   getRow(id, selectionArray, argumentArray, callback, debug = 0) {
     var statement = ''
-    if (id) {
-      statement = 'SELECT * FROM ' + this.table + ' WHERE ' + this.getColumn()[0] + '=' + arguments[0]
-    } else if (Array.isArray(arguments[1]) && Array.isArray(arguments[2])) {
-      if (arguments[1].length === arguments[2].length) {
-        var elmns = []
-        for (let i = 0; i < arguments[1].length; i++) {
-          const element = arguments[1][i];
-          elmns.push(element + '=' + "'" + arguments[2][i] + "'")
+    var error_msg = ''
+    var l = arguments.length
+    switch (l) {
+      case 1:
+        error_msg = 'id & callback is minimum'
+        break;
+      case 2:
+        if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string' && typeof arguments[1] == 'function') {
+          this.getRow(arguments[0], null, null, arguments[1], debug)
+        } else {
+          error_msg = ' please check usage with 2 arguments'
         }
-        statement = 'SELECT * FROM ' + this.table + ' WHERE ' + elmns.join(' AND ')
-      } else {
-        if (debug == 1)
-          this.configConsole('length of arguments and values are not same')
-      }
+        break
+      case 3:
+        if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string' && typeof arguments[1] == 'function' && typeof arguments[2] == 'number') {
+          this.getRow(arguments[0], null, null, arguments[1], arguments[2])
+        } else if (Array.isArray(arguments[0]) && Array.isArray(arguments[1]) && typeof arguments[2] == 'function') {
+          this.getRow(null, arguments[0], arguments[1], arguments[2], debug)
+        } else {
+          error_msg = ' please check usage with 3 arguments'
+        }
+        break
+      case 4:
+        if (Array.isArray(arguments[0]) && Array.isArray(arguments[1]) && typeof arguments[2] == 'function' && typeof arguments[3] == 'number') {
+          this.getRow(null, arguments[0], arguments[1], arguments[2], arguments[3])
+        } else if (arguments[0] == null && Array.isArray(arguments[1]) && Array.isArray(arguments[2]) && typeof arguments[3] == 'function') {
+          this.getRow(null, arguments[1], arguments[2], arguments[3], debug)
+        } else if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string' && arguments[1] == null && arguments[2] == null && typeof arguments[3] == 'function') {
+          this.getRow(arguments[0], null, null, arguments[3], debug)
+        } else {
+          error_msg = ' please check usage with 4 arguments'
+        }
+        break
+      default:
+        if (l == 5) {
+          if (typeof arguments[0] == 'number' || typeof arguments[0] == 'string') {
+            statement = 'SELECT * FROM ' + this.table + ' WHERE ' + this.getColumn()[0] + '=' + arguments[0]
+          } else if (Array.isArray(arguments[1]) && Array.isArray(arguments[2])) {
+            if (arguments[1].length === arguments[2].length) {
+              var elmns = []
+              for (let i = 0; i < arguments[1].length; i++) {
+                const element = arguments[1][i];
+                elmns.push(element + '=' + "'" + arguments[2][i] + "'")
+              }
+              statement = 'SELECT * FROM ' + this.table + ' WHERE ' + elmns.join(' AND ')
+            } else {
+              if (debug == 1)
+                this.configConsole('length of arguments and values are not same')
+            }
+          }
+          if (debug == 1)
+            this.configConsole('getRow() => ' + statement)
+          if (statement != '') {
+            try {
+              this.db.transaction((tx) => {
+                tx.executeSql(statement, [], (transaction, result) => {
+                  if (debug == 1) this.configConsole('getRow() => ' + result.rows._array[0])
+                  if (callback) callback(result.rows._array[0])
+                }, (t, eror) => this.configConsole('getRow() error => ', t, eror))
+              })
+            } catch (e) {
+              if (debug == 1)
+                this.configConsole(e)
+            }
+          } else {
+            if (debug == 1)
+              this.configConsole('statement is empty, please insert (id) or ([]fields,[]values)')
+          }
+        } else {
+          error_msg = 'not supported arguments'
+        }
+        break
     }
-    if (debug == 1)
-      this.configConsole('getRow() => ' + statement)
-    if (statement != '') {
-      try {
-        this.db.transaction((tx) => {
-          tx.executeSql(statement, [], (transaction, result) => {
-            if (debug == 1) this.configConsole('getRow() => ' + result.rows._array[0])
-            if (callback) callback(result.rows._array[0])
-          }, (t, eror) => this.configConsole('getRow() error => ', t, eror))
-        })
-      } catch (e) {
-        if (debug == 1)
-          this.configConsole(e)
-      }
-    } else {
-      if (debug == 1)
-        this.configConsole('statement is empty, please insert (id) or ([]fields,[]values)')
+    if (error_msg != '' && debug == 1) {
+      this.configConsole('getRow() => ERROR' + error_msg)
     }
   }
 
-  getAll(selectionArray, argumentArray, orderBy, limit, offset, groupBy, callback, debug = 0) {
-    var statement = 'SELECT * FROM ' + this.table + ' WHERE 1'
-    if (Array.isArray(arguments[0]) && Array.isArray(arguments[1])) {
-      if (arguments[0].length === arguments[1].length) {
-        var elmns = []
-        for (let i = 0; i < arguments[0].length; i++) {
-          const element = arguments[0][i];
-          elmns.push(element + '=' + "'" + arguments[1][i] + "'")
+  // getAll (())
+  // getAll (or, ())
+
+  // getAll (or, (), 1)
+  // getAll ([], [], ())
+  // getAll (li, of, ())
+
+  // getAll ([], [], (), 1)
+  // getAll (li, of, (), 1)
+
+  getAll(selectionArray, argumentArray, orderBy, limit, offset, groupBy, callback, debug = 1) {
+    var statement = ''
+    var error_msg = ''
+    var l = arguments.length
+    configConsole(l)
+    switch (l) {
+      case 1:
+        if (typeof arguments[0] == 'function') {
+          this.getAll(null, null, null, null, null, null, arguments[0], debug)
+        } else {
+          error_msg = 'callback is Require'
         }
-        statement = 'SELECT * FROM ' + this.table + ' WHERE ' + elmns.join(' AND ')
-      } else {
+        break
+      case 2:
+        if (typeof arguments[0] == 'function' && typeof arguments[1] == 'number') {
+          this.getAll(null, null, null, null, null, null, arguments[0], arguments[1])
+        } else if (typeof arguments[0] == 'string' && typeof arguments[1] == 'function') {
+          this.getAll(null, null, arguments[0], null, null, null, arguments[1], debug)
+        } else {
+          error_msg = ' please check usage with 2 arguments'
+        }
+        break
+      case 3:
+        if (typeof arguments[0] == 'string' && typeof arguments[1] == 'function' && typeof arguments[2] == 'number') {
+          this.getAll(null, null, arguments[0], null, null, null, arguments[1], arguments[2])
+        } else if (Array.isArray(arguments[0]) && Array.isArray(arguments[1]) && typeof arguments[2] == 'function') {
+          this.getAll(arguments[0], arguments[1], null, null, null, null, arguments[2], debug)
+        } else if (typeof arguments[0] == 'number' && typeof arguments[1] == 'number' && arguments[2] == 'function') {
+          this.getAll(null, null, null, arguments[0], arguments[1], null, arguments[2], debug)
+        } else {
+          error_msg = ' please check usage with 3 arguments'
+        }
+        break
+      case 4:
+        if (Array.isArray(arguments[0]) && Array.isArray(arguments[1]) && typeof arguments[2] == 'function' && typeof arguments[3] == 'number') {
+          this.getAll(arguments[0], arguments[1], null, null, null, null, arguments[2], arguments[3])
+        } else if (typeof arguments[0] == 'number' && typeof arguments[1] == 'number' && arguments[2] == 'function' && typeof arguments[3] == 'number') {
+          this.getAll(null, null, null, arguments[0], arguments[1], null, arguments[2], arguments[3])
+        } else {
+          error_msg = ' please check usage with 4 arguments'
+        }
+        break
+      default:
+        statement = 'SELECT * FROM ' + this.table + ' WHERE 1'
+        if (Array.isArray(arguments[0]) && Array.isArray(arguments[1])) {
+          if (arguments[0].length === arguments[1].length) {
+            var elmns = []
+            for (let i = 0; i < arguments[0].length; i++) {
+              const element = arguments[0][i];
+              elmns.push(element + '=' + "'" + arguments[1][i] + "'")
+            }
+            statement = 'SELECT * FROM ' + this.table + ' WHERE ' + elmns.join(' AND ')
+          } else {
+            if (debug == 1)
+              this.configConsole('length of arguments and values are not same')
+          }
+        }
+        if (arguments[5]) {
+          statement += ' GROUP BY ' + arguments[5]
+        }
+        if (arguments[2]) {
+          statement += ' ORDER BY ' + arguments[2]
+        }
+        if (arguments[3]) {
+          statement += ' LIMIT ' + arguments[3]
+        }
+        if (arguments[4]) {
+          statement += ' OFFSET ' + arguments[4]
+        }
         if (debug == 1)
-          this.configConsole('length of arguments and values are not same')
-      }
+          this.configConsole('getAll() => ' + statement)
+        try {
+          this.db.transaction(async (tx) => {
+            await tx.executeSql(statement, [], async (transaction, result) => {
+              if (debug == 1) this.configConsole('getAll() => ', result.rows._array)
+              if (callback) callback(result.rows._array)
+            }, (t, eror) => this.configConsole('getAll() error => ', t, eror))
+          })
+        } catch (e) {
+          if (debug == 1)
+            this.configConsole(e)
+        }
+        break
     }
-    if (arguments[5]) {
-      statement += ' GROUP BY ' + arguments[5]
-    }
-    if (arguments[2]) {
-      statement += ' ORDER BY ' + arguments[2] + ' ASC'
-    }
-    if (arguments[3]) {
-      statement += ' LIMIT ' + arguments[3]
-    }
-    if (arguments[4]) {
-      statement += ' OFFSET ' + arguments[4]
-    }
-    if (debug == 1)
-      this.configConsole('getAll() => ' + statement)
-    try {
-      this.db.transaction(async (tx) => {
-        await tx.executeSql(statement, [], async (transaction, result) => {
-          if (debug == 1) this.configConsole('getAll() => ' + result.rows._array)
-          if (callback) callback(result.rows._array)
-        }, (t, eror) => this.configConsole('getAll() error => ', t, eror))
-      })
-    } catch (e) {
-      if (debug == 1)
-        this.configConsole(e)
+    if (error_msg != '' && debug == 1) {
+      this.configConsole('getAll() => ERROR' + error_msg)
     }
   }
   configConsole() {
