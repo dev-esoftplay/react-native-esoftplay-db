@@ -72,7 +72,7 @@ Arguments
 
 ###### DELETE (with WHERE id)
 ```
-db.Delete(id,null,null, rowAffected, debug)
+db.Delete(id,rowAffected, debug)
 ```
 Arguments
 - id (string|int) - an id for 'where' reference
@@ -83,7 +83,7 @@ Arguments
 
 ###### DELETE (with WHERE clause)
 ```
-db.Delete(null,fields,arguments, rowAffected, debug)
+db.Delete(fields,arguments, rowAffected, debug)
 ```
 Arguments
 - fields (array) - an array fieldname
@@ -95,7 +95,7 @@ Arguments
 
 ###### GET ONE ROW (with WHERE id)
 ```
-db.getRow(id, null, null, result, debug)
+db.getRow(id, result, debug)
 ```
 Arguments
 - id (string|int) - an id for 'where' reference
@@ -106,7 +106,7 @@ Arguments
 
 ###### GET ONE ROW (with WHERE clause)
 ```
-db.getRow(null, fields, arguments, result, debug)
+db.getRow(fields, arguments, result, debug)
 ```
 Arguments
 - fields (array) - an array fieldname
@@ -118,6 +118,14 @@ Arguments
 
 ###### GET ALL 
 ```
+db.getAll(result)
+db.getAll(result, debug)
+db.getAll(orderBy, result) 
+db.getAll(orderBy, result,debug)
+db.getAll(fields, arguments, result)
+db.getAll(limit, offset, result)
+db.getAll(fields, arguments, result, debug)
+db.getAll(limit, offset, result, debug)
 db.getAll(fields, arguments, orderBy, limit, offset, groupBy, result, debug) 
 ```
 Arguments
